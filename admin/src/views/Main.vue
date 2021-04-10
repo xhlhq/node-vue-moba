@@ -1,9 +1,15 @@
 <template>
     <el-container style="height: 100vh;">
-        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-            <el-menu router :default-openeds="['1']" unique-opened :default-active="$route.path">
+        <el-aside width="auto" style='background-color:#343E3D'>
+            <el-menu router
+             unique-opened 
+             :default-active="$route.path" 
+             :collapse="isCollapse"
+             background-color="#343E3D"
+            text-color="#fff"
+            active-text-color="#ffd04b">
             <el-submenu index="1">
-                <template slot="title"><i class="el-icon-message"></i>内容管理</template>
+                <template slot="title"><i class="el-icon-s-order"></i><span v-show="!isCollapse">内容管理</span></template>
                 <el-menu-item-group>
                 <template slot="title">物品</template>
                 <el-menu-item index="/items/create">新建物品</el-menu-item>
@@ -11,8 +17,8 @@
                 </el-menu-item-group>
                 <el-menu-item-group>
                 <template slot="title">人物</template>
-                <el-menu-item index="/persons/create">新建人物</el-menu-item>
-                <el-menu-item index="/persons/list">人物列表</el-menu-item>
+                <el-menu-item index="/heroes/create">新建人物</el-menu-item>
+                <el-menu-item index="/heroes/list">人物列表</el-menu-item>
                 </el-menu-item-group>
                 <el-menu-item-group>
                 <template slot="title">文章</template>
@@ -21,7 +27,7 @@
                 </el-menu-item-group>
             </el-submenu>
             <el-submenu index="2">
-                <template slot="title"><i class="el-icon-message"></i>运营管理</template>
+                <template slot="title"><i class="el-icon-s-help"></i><span v-show="!isCollapse">运营管理</span></template>
                 <el-menu-item-group>
                 <template slot="title">广告</template>
                 <el-menu-item index="/ads/create">新建广告</el-menu-item>
@@ -29,7 +35,7 @@
                 </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3">
-                <template slot="title"><i class="el-icon-message"></i>系统设置</template>
+                <template slot="title"><i class="el-icon-s-tools"></i><span v-show="!isCollapse">系统设置</span></template>
                 <el-menu-item-group>
                 <template slot="title">分类</template>
                 <el-menu-item index="/categories/create">新建分类</el-menu-item>
@@ -45,28 +51,28 @@
         </el-aside>
         
         <el-container>
-            <el-header style="text-align: right; font-size: 12px">
-            <el-dropdown>
-                <i class="el-icon-setting" style="margin-right: 15px"></i>
-                <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>查看</el-dropdown-item>
-                <el-dropdown-item>新增</el-dropdown-item>
-                <el-dropdown-item>删除</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-            <span>王小虎</span>
+            <el-header class="header"  style="background-color: #3498db">
+              <div>
+                  <i 
+                  :class="{'el-icon-s-fold':!isCollapse,'el-icon-s-unfold':isCollapse}"
+                  @click="isCollapse=!isCollapse"></i>
+                  <span>我的博客管理页面</span>
+              </div>
+              <el-dropdown>
+                  <div class="avatar-wrap">
+                      <img :src="user.photo" alt="">
+                      <span>{{user.name}}</span>
+                      <i class="el-icon-arrow-down el-icon--right"></i>
+                  </div>
+              <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>设置</el-dropdown-item>
+                  <el-dropdown-item @click.native='onLogout'>退出</el-dropdown-item>
+              </el-dropdown-menu>
+              </el-dropdown>
             </el-header>
             
             <el-main>
             <router-view></router-view>
-            <!-- <el-table :data="tableData">
-                <el-table-column prop="date" label="日期" width="140">
-                </el-table-column>
-                <el-table-column prop="name" label="姓名" width="120">
-                </el-table-column>
-                <el-table-column prop="address" label="地址">
-                </el-table-column>
-            </el-table> -->
             </el-main>
         </el-container>
     </el-container>
@@ -75,13 +81,12 @@
 <script>
   export default {
     data() {
-      const item = {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      };
       return {
-        tableData: Array(20).fill(item)
+        user: {
+          photo: '../assets/logo.png',
+          name: '用户名'
+        },
+        isCollapse: false
       }
     }
   };
@@ -96,5 +101,21 @@
   
   .el-aside {
     color: #333;
+  }
+  .header {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  .header .avatar-wrap {
+        display: flex;
+        align-items: center;
+  }
+  .header .avatar-wrap img {
+      width: 32px;
+      height: 32px;
+      margin-right: 3px;
+      border-radius: 50%;
   }
 </style>

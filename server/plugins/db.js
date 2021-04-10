@@ -6,4 +6,7 @@ module.exports = app => {
         useNewUrlParser: true,
         useFindAndModify: false
     })
+
+    //把所有模型都引用一遍
+    require('require-all')(__dirname + '/../models')
 }

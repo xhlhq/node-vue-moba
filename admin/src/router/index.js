@@ -6,8 +6,8 @@ const CategoryEdit = () => import(/* webpackChunkName: "categoryEdit" */ '../vie
 const CategoryList = () => import(/* webpackChunkName: "categoryList" */ '../views/CategoryList.vue')
 const ItemEdit = () => import(/* webpackChunkName: "itemEdit" */ '../views/ItemEdit.vue')
 const ItemList = () => import(/* webpackChunkName: "itemList" */ '../views/ItemList.vue')
-const PersonEdit = () => import(/* webpackChunkName: "personEdit" */ '../views/PersonEdit.vue')
-const PersonList = () => import(/* webpackChunkName: "personList" */ '../views/PersonList.vue')
+const HeroEdit = () => import(/* webpackChunkName: "heroEdit" */ '../views/HeroEdit.vue')
+const HeroList = () => import(/* webpackChunkName: "heroList" */ '../views/HeroList.vue')
 const ArticleEdit = () => import(/* webpackChunkName: "articleEdit" */ '../views/ArticleEdit.vue')
 const ArticleList = () => import(/* webpackChunkName: "adList" */ '../views/ArticleList.vue')
 const AdEdit = () => import(/* webpackChunkName: "adEdit" */ '../views/AdEdit.vue')
@@ -34,9 +34,9 @@ const routes = [
       {path: '/items/edit/:id',component: ItemEdit,props: true},
       {path: '/items/list',component: ItemList},
 
-      {path: '/persons/create',component: PersonEdit},
-      {path: '/persons/edit/:id',component: PersonEdit,props: true},
-      {path: '/persons/list',component: PersonList},
+      {path: '/heroes/create',component: HeroEdit},
+      {path: '/heroes/edit/:id',component: HeroEdit,props: true},
+      {path: '/heroes/list',component: HeroList},
 
       {path: '/articles/create',component: ArticleEdit},
       {path: '/articles/edit/:id',component: ArticleEdit,props: true},

@@ -24,7 +24,9 @@ export default {
     },
     data(){
         return {
-            data:{},//分类
+            data:{
+                name: ''
+            },//分类
             parents: [],//上级分类数组
         }
     },

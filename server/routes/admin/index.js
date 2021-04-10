@@ -37,12 +37,42 @@ module.exports = app => {
         //限制10条数据 
         //populate(parent) 返回的parent表示其关联的对象
         // const items = await req.Model.find().populate('parent').limit(10)
+        const { page, limit, search,categoryId } = await req.query
         const queryOptions = {}
+        const categoryList = []
         if(req.Model.modelName === 'Category'){
             queryOptions.populate = 'parent'
+
+        //返回有子分类的分类
+        const Category  = require('../../models/Category')
+        //先获取有parent的分类
+        const haveParent = await Category.find({'parent':{$type: 7}})
+        //获取他们的父类id
+        let categoryIdArr = new Set()
+        haveParent.forEach(i => {
+            categoryIdArr.add(i.parent.toString())
+        })
+        categoryIdArr.forEach(async id => {
+            categoryList.push(await Category.findById(id).lean())
+        })
         }
-        const items = await req.Model.find().setOptions(queryOptions).limit(10)
-        res.send(items)
+        const skipCount = (page - 1) * limit
+        let items = []
+        if(search){
+            items = await req.Model.find({'name':{$regex: search}}).setOptions(queryOptions).skip(skipCount).limit(Number(limit))
+        }else if(categoryId){
+            items = await req.Model.find({'parent':categoryId}).setOptions(queryOptions).skip(skipCount).limit(Number(limit))
+        }else{
+            items = await req.Model.find().setOptions(queryOptions).skip(skipCount).limit(Number(limit))
+        }
+        //总数
+        const count = await req.Model.find().setOptions(queryOptions).count()
+        const data = {
+            items: items,
+            count: count,
+            categoryList: categoryList  //展示有自类的列表
+        }
+        res.send(data)
     })
     //根据id查询，返回名称
     router.get('/:id',async (req,res) => {

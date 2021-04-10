@@ -1,7 +1,7 @@
 <template>
   <div class="category-list">
       <h1>文章列表</h1>
-      <el-table :data="items">
+      <el-table :data="resData.items">
           <el-table-column prop="_id" label="ID" width="240"></el-table-column>
           <el-table-column prop="title" label="标题" ></el-table-column>
           <el-table-column
@@ -14,6 +14,18 @@
           </template>
           </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="resData.count"
+          style="margin: 2rem auto">
+        </el-pagination>
+      </div>
   </div>
 </template>
 
@@ -21,7 +33,12 @@
 export default {
     data(){
         return {
-            items: []
+            resData: {},
+            currentPage: 1,
+            data: {
+              page: 1,
+              limit: 10
+            }
         }
     },
     created(){
@@ -29,8 +46,10 @@ export default {
     },
     methods: {
         async fetch(){
-            const res = await this.$http.get('rest/articles')
-            this.items = res.data
+            const res = await this.$http.get('rest/articles',{
+              params: this.data
+            })
+            this.resData = res.data
         },
         async remove(row){
           this.$confirm(`是否确定要删除分类：${row.title}`, '提示', {
@@ -48,6 +67,16 @@ export default {
           this.fetch()
           }
         })
+        },
+        //分页
+        handleSizeChange(val) {
+          this.data.limit = val
+          this.fetch()
+        },
+        handleCurrentChange(val) {
+          this.currentPage = val
+          this.data.page = val
+          this.fetch()
         }
     }
 }

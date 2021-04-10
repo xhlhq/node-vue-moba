@@ -7,7 +7,8 @@
    "multer": "^1.4.2",            图片处理
    "bcrypt": "^5.0.1",            密码加密
    "jsonwebtoken": "^8.5.1",      token处理
-   "http-assert": "^1.4.1",       判断是否存在assert(value,status,message)
+   "http-assert": "^1.4.1",       判断是value否存在,返回status和message assert(value,status,message)
+   "require-all": "^3.0.0",       引入某个文件夹内的所有文件        
 ```
 
 ### routes\admin\index.js

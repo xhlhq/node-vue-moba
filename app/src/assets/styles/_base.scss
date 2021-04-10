@@ -1,0 +1,148 @@
+/* 
+background-color: bg-
+font-size: font-size-(xs,sm,md,lg,xl)
+color: text-
+
+display:flex: .d-flex
+flex-column
+flex-wrap
+justify-content: flex-js-
+align-items: flex-ai-
+align-content: flex-ac-
+
+
+margin(padding): 
+m(p)-(0,1,2,3,4)
+m(p)(x,y)-(0,1,2,3,4)
+m(p)-(t,r,b,l)-(0,1,2,3,4)
+*/
+@import './variable.scss';
+* {
+    box-sizing: border-box;
+    outline: none;
+}
+html {
+    font-size: $base-font-size;
+}
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.2rem;
+    background-color: #f1f1f1;
+}
+img {
+    max-width: 100%;
+}
+a {
+    color: #999;
+}
+button {
+    border: none;
+}
+//
+.w-100 {
+    width: 100%;
+}
+.h-100 {
+    height: 100%;
+}
+
+//text-color
+@each $colorKey, $color in $colors {
+    .text-#{$colorKey} {
+        color: $color;
+    }
+};
+//bg-color
+@each $bgKey, $color in $colors {
+    .bg-#{$bgKey} {
+        background-color: $color;
+    }
+};
+
+//text
+@each $var in (left,center,right) {
+    .text-#{$var} {
+        text-align: $var !important;
+    }
+};
+
+//font-size
+@each $fsKey, $font-size in $font-sizes {
+    .font-size-#{$fsKey} {
+        font-size: $font-size * $base-font-size;
+    }
+};
+
+//flex
+.d-flex {
+    display: flex;
+};
+.flex-column {
+    flex-direction: column;
+};
+.flex-wrap {
+    flex-wrap: wrap;
+};
+
+@each $jcKey, $jc in $flex-jc {
+    .flex-jc-#{$jcKey} {
+        justify-content: $jc;
+    }
+};
+
+@each $aiKey, $ai in $flex-ai {
+    .flex-ai-#{$aiKey} {
+        align-items: $ai;
+    }
+};
+
+@each $acKey, $ac in $flex-ac {
+    .flex-ac-#{$acKey} {
+        align-content: $ac;
+    }
+};
+.flex-1 {
+    flex: 1;
+}
+.flex-grow-1 {
+    flex-grow: 1;
+};
+
+
+//spacing
+@each $typeKey,$type in $spacing-types {
+    @each $sizeKey,$size in $spacing-sizes {
+        .#{$typeKey}-#{$sizeKey} {
+            #{$type}: $size * $spacing-base-size;
+        }
+        .#{$typeKey}x-#{$sizeKey} {
+            #{$type}-left: $size * $spacing-base-size;
+            #{$type}-right: $size * $spacing-base-size;
+        }
+        .#{$typeKey}y-#{$sizeKey} {
+            #{$type}-top: $size * $spacing-base-size;
+            #{$type}-bottom: $size * $spacing-base-size;
+        }
+    }
+};
+
+@each $typeKey,$type in $spacing-types {
+    @each $directionKey,$direction in $spacing-directions {
+        @each $sizeKey,$size in $spacing-sizes {
+            .#{$typeKey}-#{$directionKey}-#{$sizeKey} {
+                #{$type}-#{$direction}: $size * $spacing-base-size;
+            }
+        }
+    }
+};
+//单行省略
+.ellipsis {
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+//边框
+.border-bottom {
+    border-bottom: 1px solid map-get($colors, 'light-1');
+}

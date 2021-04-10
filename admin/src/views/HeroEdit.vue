@@ -2,7 +2,7 @@
   <div class="category-edit">
       <h1>{{id ? '编辑' : '新建'}}人物</h1>
       <el-form label-width="120px" @submit.native.prevent="save">
-          <el-tabs value="skills" type="border-card">
+          <el-tabs value="basic" type="border-card">
               <el-tab-pane label="基本信息" name="basic">
                 <el-form-item label="名字">
                     <el-input v-model="data.name"></el-input>
@@ -54,10 +54,23 @@
                         class="avatar-uploader"
                         :action="$http.defaults.baseURL + '/upload'"
                         :show-file-list="false"
+                        :headers="getAuthHeaders()"
                         :on-success="afterUpload"
                         >
                         <img v-if="data.avatar" :src="data.avatar" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                </el-form-item>
+                <el-form-item label="背景">
+                    <el-upload
+                        class="skin-uploader"
+                        :action="$http.defaults.baseURL + '/upload'"
+                        :show-file-list="false"
+                        :headers="getAuthHeaders()"
+                        :on-success="res => $set(data,'bg',res.url)"
+                        >
+                        <img v-if="data.bg" :src="data.bg" class="skin">
+                        <i v-else class="el-icon-plus skin-uploader-icon"></i>
                         </el-upload>
                 </el-form-item>
               </el-tab-pane>
@@ -92,6 +105,34 @@
                       </el-col>
                   </el-row>
               </el-tab-pane>
+                <el-tab-pane label="皮肤" name="skins">
+                  <el-button type="text" @click="data.skins.push({})"><i class="el-icon-plus"></i>添加皮肤</el-button>
+                  <el-row type="flex" style="flex-wrap:wrap;">
+                      <el-col :md="12" v-for="(item,index) in data.skins" :key="index">
+                          <el-form-item label="图像">
+                            <el-upload
+                                class="skin-uploader"
+                                :action="$http.defaults.baseURL + '/upload'"
+                                :show-file-list="false"
+                                :headers="getAuthHeaders()"
+                                :on-success="res => $set(item,'skinPic',res.url)"
+                                >
+                                <img v-if="item.skinPic" :src="item.skinPic" class="skin">
+                                <i v-else class="el-icon-plus skin-uploader-icon"></i>
+                            </el-upload>
+                          </el-form-item>
+                          <el-form-item label="皮肤名称">
+                              <el-input v-model="item.skinName"></el-input>
+                          </el-form-item>
+                          <el-form-item label="皮肤描述">
+                            <el-input type="textarea" v-model="item.skinDescription"></el-input>
+                          </el-form-item>
+                          <el-form-item>
+                            <el-button type="danger" size="small" @click="data.skins.splice(index,1)">删除</el-button>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+              </el-tab-pane>
           </el-tabs>
           <el-form-item style="margin-top: 1rem">
               <el-button type="primary" native-type="sumbit">保存</el-button>
@@ -111,6 +152,7 @@ export default {
                 name:'',
                 avatar:'',
                 title: '',
+                skins: [],
                 categories: [],
                 scores: {
                     difficult: 0,
@@ -127,7 +169,8 @@ export default {
                 partners: []
             },
             categories: [],
-            items: []
+            items: [],
+            multiple: true
         }
     },
     created(){
@@ -142,13 +185,12 @@ export default {
             let res
             if(this.id){
                 //更新
-                res = await this.$http.put(`rest/persons/${this.id}`,this.data)
+                res = await this.$http.put(`rest/heroes/${this.id}`,this.data)
             }else{
                 //创建
-                res = await this.$http.post('rest/persons',this.data)
+                res = await this.$http.post('rest/heroes',this.data)
             }
-            console.log(res)
-            this.$router.push('/persons/list')
+            this.$router.push('/heroes/list')
             this.$message({
                 type: 'success',
                 message: '保存成功'
@@ -156,7 +198,7 @@ export default {
         },
         //编辑分类
         async fetch(){
-            const res = await this.$http.get(`rest/persons/${this.id}`)
+            const res = await this.$http.get(`rest/heroes/${this.id}`)
             // this.data = res.data
             this.data = Object.assign({},this.data,res.data)
         },
@@ -170,13 +212,16 @@ export default {
         //获取分类数据
         async fetchCategories(){
             const res = await this.$http.get(`rest/categories`)
-            this.categories = res.data
+            this.categories = res.data.items
         },
         //获取物品数据
         async fetchItems(){
             const res = await this.$http.get(`rest/items`)
             this.items = res.data
         },
+        uploadFile(file){
+            this.data.skins.push(file.file)
+        }
     }
 }
 </script>
@@ -203,6 +248,29 @@ export default {
   .avatar {
     width: 5rem;
     height: 5rem;
+    display: block;
+  }
+  .skin-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .skin-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .skin-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 5rem;
+    height: 5rem;
+    line-height: 5rem;
+    text-align: center;
+  }
+  .skin {
+    width: 100%;
+    height: auto;
     display: block;
   }
 </style>

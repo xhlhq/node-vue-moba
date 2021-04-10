@@ -13,8 +13,11 @@ app.use(express.json())
 app.use('/uploads',express.static(__dirname + '/uploads'))
 
 require('./plugins/db')(app)
-
+//后台管理
 require('./routes/admin')(app)
+//手机端
+require('./routes/app')(app)
+
 
 app.listen(port,() => {
     console.log(`端口${port}已被监听: http//losthost:${port}`);
